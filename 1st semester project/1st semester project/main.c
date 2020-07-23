@@ -10,10 +10,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-char LCD_start[] = {
-	"LED_COUNT",
-	"FND_CONNT"
-};
+
 
 char LED_font[] = {
 	0b00000000,
@@ -28,16 +25,16 @@ char LED_font[] = {
 };
 
 char FND_font[] = {
-	0b00000011,
-	0b10011111,
-	0b00100101,
-	0b00001101,
-	0b10011001,
-	0b01001001,
-	0b01000001,
-	0b00011011,
-	0b00000001,
-	0b00001001
+	0b01111101,
+	0b00001001,
+	0b01101110,
+	0b01110110,
+	0b00110011,
+	0b01010111,
+	0b01011111,
+	0b01110001,
+	0b01111111,
+	0b01110111
 };
 
 void COMMAND(unsigned char byte);	
@@ -49,7 +46,7 @@ void MOVE(int y,int x);
 
 int main(void)
 {
-	int i, flag = 0, LED_d = 0, FND_d = 0;
+	int i = 1, flag = 0, LED_d = 0, FND_d = 0;
 	
 	DDRC = 0xff;
 	PORTC = 0x00;
@@ -57,8 +54,8 @@ int main(void)
 	DDRA = 0xff;
 	PORTA = 0x00;
 	
-	DDRF = 0xFF;
-	PORTF = 0x00;
+	DDRB = 0xFF;
+	PORTB = 0xff;
 	
 	DDRE = 0x00;
 	
@@ -68,52 +65,59 @@ int main(void)
     {
 		if(flag == 0)
 		{
+			LCD_INIT();
 			PORTA = 0x00;
-			PORTF = 0x00;
+			PORTB = 0x00;
 			
-			MOVE(3,1);
-			LCD_Str(LCD_start[0]);
-			MOVE(3,2);
-			LCD_Str(LCD_start[1]);
+			MOVE(1,3);
+			LCD_Str("LED_COUNT");
+			MOVE(2,3);
+			LCD_Str("FND_CONNT");
 			
-			if(PINE == 0x01)
+			if((PINE & 0x10) == 0x00)
 			{
-				i++;
-				i = i % 2;
+				if(i == 2) i=1;
+				else i++;
+				_delay_ms(500);
 			}
-			else if(PINE == 0x02)
+			else if((PINE & 0x20) == 0x00)
 			{
-				if(i == 1) i--;
-				else if(i == 0) i++;
+				if(i == 1) i=2;
+				else i--;
+				_delay_ms(500);
 			}
-			else if(PINE == 0x04)
+			else if((PINE & 0x40) == 0x00)
 			{
-				if(i == 0) flag = 1;
-				else if(i == 1) flag = 2;
+				if(i == 1) flag = 1;
+				else if(i == 2) flag = 2;
+				
 			}
 			
-			MOVE(1, i+1);
+			MOVE(i, 1);
 			DATA("-");
+			_delay_ms(1);
 		}
 		else if(flag == 1)
 		{
-			if(PINE == 0x03) flag = 0;
-			if(PINE == 0x08)
+			if((PINE & 0x30) == 0x00) {flag = 0; _delay_ms(500);}
+			if((PINE & 0x80) == 0x00)
 			{
 				LED_d++;
+				_delay_ms(500);
 			}
 			LED_d = LED_d % 9;
 			PORTA = LED_font[LED_d];
 		}
 		else if(flag == 2)
 		{
-			if(PINE == 0x03) flag = 0;
-			if(PINE == 0x08)
+			if((PINE & 0x30) == 0x00) {flag = 0; _delay_ms(500);}
+			if((PINE & 0x80) == 0x00)
 			{
 				FND_d++;
+				_delay_ms(500);
 			}
-			FND_d = FND_d % 9;
-			PORTF = FND_font[FND_d];
+			FND_d = FND_d % 10;
+			PORTB = FND_font[FND_d];
 		}
     }
 }
