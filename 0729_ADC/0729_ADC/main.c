@@ -1,10 +1,11 @@
 #include <avr/io.h>
 #define F_CPU 16000000UL
 #include <util/delay.h>
-#define CDS_10 0
-#define CDS_20 200
-#define CDS_50 400
-#define CDS_80 600
+#define CDS_0 0
+#define CDS_15 200
+#define CDS_30 350
+#define CDS_50 550
+#define CDS_75 750
 #define CDS_100 1000
 
 void int_adc();
@@ -46,10 +47,10 @@ unsigned short read_adc()
 
 void show_adc_led(unsigned short value)
 {
-	if(value<=CDS_10) PORTA = 0x1F;
-	else if(value<=CDS_20) PORTA = 0x0F;
-	else if(value<=CDS_50) PORTA = 0x07;
-	else if(value<=CDS_80) PORTA = 0x03;
-	else if(value<=CDS_100) PORTA = 0x01;
-	else PORTA = 0x00;
+	if(value<=CDS_0) PORTA = 0x1F;
+	else if(value<=CDS_15) PORTA = 0x0F;
+	else if(value<=CDS_30) PORTA = 0x07;
+	else if(value<=CDS_50) PORTA = 0x03;
+	else if(value<=CDS_75) PORTA = 0x01;
+	else if(value<=CDS_100) PORTA = 0x00;
 }
