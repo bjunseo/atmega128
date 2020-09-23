@@ -7,24 +7,34 @@ volatile char _speed=0;
 
 char rx_flag=1;
 
-void US_init(unsigned int UB)
+void USART_Init(void)
 {
-	UBRR0H=(unsigned char)(UB>>8);
-	UBRR0L=(unsigned char)UB;
-	UCSR0B=(1<<RXEN0);
+	UCSR0A=0x00; // clear
+	UCSR0B=(1<<RXEN1) | (1<<TXEN1); // Rx, Tx Enable
+	UCSR0C=(0<<UCSZ02) | (1<<UCSZ01) | (1<<UCSZ00); // Tx data len : 8-bit
+	
+	UBRR0H=0;
+	UBRR0L=51; // baudrate 19200
 }
 
-unsigned char RX0_CH()
+unsigned char USART_Receive(void)
 {
-	while(!(UCSR0A&(1<<RXC0)));
-	rx_flag=1;
-	return UDR0;
+	while(!(UCSR0A & (1<<RXC0))) // Wait for data to be received
+	;
+	return UDR0; // Get and return received data form buffer
+}
+
+void USART_Transmit(unsigned char data)
+{
+	while(!(UCSR0A & (1<<UDRE))) // Wait for empty transmit buffer
+	;
+	UDR0=data; // Put data into buffer, sends the  data
 }
 
 int main(void)
 {	
 	unsigned char rx_buf;
-	US_init(103);
+	USART_Init();
 	DDRF=0xFF;
 	DDRB=0x60;
 	DDRE=0x00;
@@ -36,13 +46,8 @@ int main(void)
 	
 	while(1)
 	{	
-		rx_buf = RX0_CH();
+		_speed = USART_Receive();
 		
-		if(rx_buf)
-		{
-			rx_flag = 0;
-			_speed = rx_buf;
-		}
 		if((PINE & 0x01)==0x00)
 		{
 			if(_speed == 0)
