@@ -1,18 +1,38 @@
-/*
- * touchSensor_Buzzer_1028.c
- *
- * Created: 2020-10-28 ì˜¤ì „ 9:00:50
- * Author : user
- */ 
+#define F_CPU 16000000UL
+#include <avr/io.h>  // AVR ÀÔÃâ·Â¿¡ ´ëÇÑ Çì´õ ÆÄÀÏ
+#include <util/delay.h>  // delay ÇÔ¼ö»ç¿ëÀ» À§ÇÑ Çì´õÆÄÀÏ
+#include <avr/interrupt.h>
 
-#include <avr/io.h>
+volatile int tone;
+int i=0;
+char f_table[9] = {17,43,66,77,97,114,127,137,255};
 
-
-int main(void)
+ISR(TIMER0_OVF_vect)
 {
-    /* Replace with your application code */
-    while (1) 
-    {
-    }
+	PORTB ^= 1 << 5;
+	TCNT0 = f_table[tone];
 }
 
+int main()
+{
+	DDRB = 0x20;
+	TCCR0 = 0x03;
+	TIMSK = 0x01;
+	//OCR0 = 128;
+	
+	sei();
+	//tone = 8;
+	while(1){
+		while((PIND & 0x01))
+		{
+			i++;
+			tone = i;
+			_delay_ms(1000);	
+			if(i==9)
+			{
+				i = 0;		
+			}		
+			
+		}
+	}
+}
