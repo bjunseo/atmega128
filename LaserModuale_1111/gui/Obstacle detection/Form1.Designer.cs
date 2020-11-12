@@ -28,12 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.PortList = new System.Windows.Forms.ComboBox();
             this.Receive = new System.Windows.Forms.TextBox();
             this.status = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.ssss = new System.Windows.Forms.Label();
+            this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.SuspendLayout();
             // 
             // label1
@@ -57,10 +59,10 @@
             // 
             // Receive
             // 
-            this.Receive.Location = new System.Drawing.Point(335, 84);
+            this.Receive.Location = new System.Drawing.Point(335, 85);
             this.Receive.Multiline = true;
             this.Receive.Name = "Receive";
-            this.Receive.Size = new System.Drawing.Size(127, 325);
+            this.Receive.Size = new System.Drawing.Size(127, 20);
             this.Receive.TabIndex = 2;
             // 
             // status
@@ -84,7 +86,7 @@
             // ssss
             // 
             this.ssss.AutoSize = true;
-            this.ssss.Location = new System.Drawing.Point(243, 239);
+            this.ssss.Location = new System.Drawing.Point(241, 345);
             this.ssss.Name = "ssss";
             this.ssss.Size = new System.Drawing.Size(65, 12);
             this.ssss.TabIndex = 5;
@@ -118,6 +120,7 @@
         private System.Windows.Forms.Label status;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label ssss;
+        private System.IO.Ports.SerialPort serialPort1;
     }
 }
 

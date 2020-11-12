@@ -16,7 +16,8 @@ namespace Obstacle_detection
     public partial class Form1 : Form
     {
         private SerialPort _serialPort;
-        int i;
+        int Count = 1;
+        
         public Form1()
         {
             InitializeComponent();
@@ -60,15 +61,17 @@ namespace Obstacle_detection
         {
             string ReceiveData = _serialPort.ReadChar().ToString();
             Receive.Text = ReceiveData;
+            Thread thread = new Thread(playWP);
             if (ReceiveData == "1")
             {
-               Thread thread = new+
-                playWP();
+                thread.Start();
                 this.BackColor = Color.Red;
                 ssss.Text = "침입감지";
+                
             }
-            if (ReceiveData == "2")
+            else if (ReceiveData == "2")
             {
+                thread.Abort();
                 this.BackColor = Color.Blue;
                 ssss.Text = "침입감지중";
             }
@@ -76,19 +79,26 @@ namespace Obstacle_detection
         
         private void playWP()
         {
-            
-            SoundPlayer wp1 = new SoundPlayer("C:/Users/user/Documents/Atmel Studio/7.0/schoolbook/LaserModuale_1111/gui/녹음.wav");
-            wp1.PlaySync();
+            if(Count == 1)
+            {
+                Count = 0;
+                SoundPlayer wp1 = new SoundPlayer("C:/Users/user/Documents/Atmel Studio/7.0/schoolbook/LaserModuale_1111/gui/녹음.wav");
+                wp1.PlaySync();
+                Count = 1;
+            }
+            else            
+            {
+
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
-
         private void label2_Click(object sender, EventArgs e)
         {
-
+         
         }
     }
 }
