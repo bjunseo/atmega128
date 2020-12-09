@@ -86,7 +86,7 @@
             // ssss
             // 
             this.ssss.AutoSize = true;
-            this.ssss.Location = new System.Drawing.Point(241, 345);
+            this.ssss.Location = new System.Drawing.Point(238, 259);
             this.ssss.Name = "ssss";
             this.ssss.Size = new System.Drawing.Size(65, 12);
             this.ssss.TabIndex = 5;
